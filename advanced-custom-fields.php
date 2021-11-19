@@ -66,4 +66,55 @@ if (function_exists('add_filter')) {
         // return
         return $paths;
     });
+    
+    /**
+     * Set local php save path
+     * @param  string $path unmodified local path for acfe-php
+     * @return string       our modified local path for acfe-php
+    */
+    add_filter('acfe/settings/php_save', function ($path) {
+
+    // Set Sage9 friendly path at /theme-directory/resources/assets/acfe-php
+    
+        if (is_dir(get_stylesheet_directory() . '/assets')) {
+            // This is Sage 9
+            $path = get_stylesheet_directory() . '/assets/acfe-php';
+        } elseif (is_dir(get_stylesheet_directory() . '/resources/assets')) {
+            // This is old Sage 10
+            $path = get_stylesheet_directory() . '/resources/assets/acfe-php';
+        } elseif (is_dir(get_stylesheet_directory() . '/resources')) {
+            // This is Sage 10
+            $path = get_stylesheet_directory() . '/resources/acfe-php';
+        } else {
+            // This probably isn't Sage
+            $path = get_stylesheet_directory() . '/acfe-php';
+        }
+    
+        // Always return
+        return $path;
+    });
+    
+    
+    /**
+     * Set local php load path
+     * @param  string $path unmodified local path for acfe-php
+     * @return string       our modified local path for acfe-php
+    */
+    add_filter('acfe/settings/php_load', function ($paths) {
+        // Sage 9 path
+        $paths[] = get_stylesheet_directory() . '/assets/acfe-php';
+
+        // old Sage 10 path
+        $paths[] = get_stylesheet_directory() . '/resources/assets/acfe-php';
+
+        // Sage 10 path
+        $paths[] = get_stylesheet_directory() . '/resources/acfe-php';
+
+        // Failsafe path
+        $paths[] = get_stylesheet_directory() . '/acfe-php';
+
+        // return
+        return $paths;
+    });
+    
 }
